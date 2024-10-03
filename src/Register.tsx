@@ -41,11 +41,11 @@ const Register = () => {
 
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
-    console.log(result);
-    console.log(pwd);
+    console.log("Valid PWD : " + result);
     setValidPwd(result);
-    const match = pwd === pwdMatch;
+    const match = pwd === pwdMatch && pwdMatch != "";
     setValidPwdMatch(match);
+    console.log("Valid PWD Match : " + match);
   }, [pwd, pwdMatch]);
 
   //clear message even change each one user,pwd pwdMatch
@@ -86,9 +86,10 @@ const Register = () => {
           <FontAwesomeIcon icon={faInfoCircle} />
           4 to 24 charcters <br />
           Must begin with a letter <br />
-          Letters, numbers, underscores,hyphens allowed/
+          Letters, numbers, underscores,hyphens allowed.
         </p>
 
+        {/* Password pane */}
         <label htmlFor="password" className="block text-center">
           Password:
           <span className={validPwd ? "valid" : "hide"}>
@@ -118,7 +119,50 @@ const Register = () => {
           <span aria-label="hashtag">$</span>
           <span aria-label="percent">%</span>
         </p>
+
+        {/* Confirm Password */}
+
+        <label htmlFor="confirmpassword" className="block text-center">
+          Confirm Password:
+          <span className={validPwdMatch ? "valid" : "hide"}>
+            <FontAwesomeIcon icon={faCheck} />
+          </span>
+          <span className={validPwdMatch || !pwdMatch ? "hide" : "invalid"}>
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+        </label>
+        <input
+          type="password"
+          id="confirmpassword"
+          autoComplete="off"
+          required
+          onChange={(e) => setPwdMatch(e.target.value)}
+          aria-invalid={validPwdMatch ? "false" : "true"}
+          aria-describedby="confirmdnote"
+          onFocus={() => setPwdMatchFocus(true)}
+          onBlur={() => setPwdMatchFocus(false)}
+        />
+        <p
+          id="confirmdnote"
+          className={pwdMatchFocus && !validPwdMatch ? "instructions" : "offscreen"}
+        >
+          <FontAwesomeIcon icon={faInfoCircle} />
+          Must match the first password input field. <br />
+        </p>
+
+        <button type="submit" disabled={!validName || !validPwd || !validPwdMatch ? true : false}>
+          Sign Up
+        </button>
       </form>
+
+      <p>
+        Already Register?
+        <br />
+        <span className="underline">
+          {/* Put router link here */}
+          <a href="#">Sign In</a>
+        </span>
+      </p>
     </section>
   );
 };
