@@ -1,5 +1,126 @@
+import { useRef, useState, useEffect } from "react";
+import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+// regex for user validation
+const USER_REGEX = /^[a-zA-Z][a-zA-Z-0-9-_]{3,23}$/;
+// regex for password validation
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
 const Register = () => {
-  return <div></div>;
+  const userRef = useRef();
+  const errRef = useRef();
+
+  const [user, setUser] = useState("");
+  const [validName, setValidName] = useState(false);
+  const [userFocus, setUserFocus] = useState(false);
+
+  const [pwd, setPwd] = useState("");
+  const [validPwd, setValidPwd] = useState(false);
+  const [pwdFocus, setPwdFocus] = useState(false);
+
+  const [pwdMatch, setPwdMatch] = useState("");
+  const [validPwdMatch, setValidPwdMatch] = useState(false);
+  const [pwdMatchFocus, setPwdMatchFocus] = useState(false);
+
+  const [errMsg, setErrMsg] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    //for focus curser in input box
+    userRef.current.focus();
+  }, []);
+  //choon araye khalist faghat zamany bargozary mishavad ke component bargiri Mishavar
+
+  useEffect(() => {
+    const result = USER_REGEX.test(user);
+    console.log(result);
+    console.log(user);
+    setValidName(result);
+  }, [user]);
+
+  useEffect(() => {
+    const result = PWD_REGEX.test(pwd);
+    console.log(result);
+    console.log(pwd);
+    setValidPwd(result);
+    const match = pwd === pwdMatch;
+    setValidPwdMatch(match);
+  }, [pwd, pwdMatch]);
+
+  //clear message even change each one user,pwd pwdMatch
+  useEffect(() => {
+    setErrMsg("");
+  }, [user, pwd, pwdMatch]);
+
+  return (
+    <section className="w-96 bg-blue-700 p-5 text-white rounded-lg text-left  flex flex-col gap-6">
+      <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+        {errMsg}
+      </p>
+
+      <h1>Register</h1>
+      <form className="flex flex-col justify-start items-start">
+        <label htmlFor="username" className="block text-center">
+          Username:
+          <span className={validName ? "valid" : "hide"}>
+            <FontAwesomeIcon icon={faCheck} />
+          </span>
+          <span className={validName || !user ? "hide" : "invalid"}>
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+        </label>
+        <input
+          type="text"
+          id="username"
+          ref={userRef}
+          autoComplete="off"
+          required
+          onChange={(e) => setUser(e.target.value)}
+          aria-invalid={validName ? "false" : "true"}
+          aria-describedby="uidnote"
+          onFocus={() => setUserFocus(true)}
+          onBlur={() => setUserFocus(false)}
+        />
+        <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
+          <FontAwesomeIcon icon={faInfoCircle} />
+          4 to 24 charcters <br />
+          Must begin with a letter <br />
+          Letters, numbers, underscores,hyphens allowed/
+        </p>
+
+        <label htmlFor="password" className="block text-center">
+          Password:
+          <span className={validPwd ? "valid" : "hide"}>
+            <FontAwesomeIcon icon={faCheck} />
+          </span>
+          <span className={validPwd || !pwd ? "hide" : "invalid"}>
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+        </label>
+        <input
+          type="password"
+          id="Password"
+          autoComplete="off"
+          required
+          onChange={(e) => setPwd(e.target.value)}
+          aria-invalid={validPwd ? "false" : "true"}
+          aria-describedby="pwddnote"
+          onFocus={() => setPwdFocus(true)}
+          onBlur={() => setPwdFocus(false)}
+        />
+        <p id="pwddnote" className={pwdFocus && pwd && !validPwd ? "instructions" : "offscreen"}>
+          <FontAwesomeIcon icon={faInfoCircle} />
+          8 to 24 charcters <br />
+          Must include uppercase lowercase letters,a number and special character <br />
+          Allow special characters: <span aria-label="exclamation mark">!</span>
+          <span aria-label="at symbol">@</span>
+          <span aria-label="hashtag">$</span>
+          <span aria-label="percent">%</span>
+        </p>
+      </form>
+    </section>
+  );
 };
 
 export default Register;
