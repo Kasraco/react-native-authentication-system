@@ -2,6 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+.instructions {
+  color: red;
+  text-align: left;
+  float: left;
+  display: inline;
+}
+
+.offscreen {
+  color: blue;
+  display: none;
+}
+
+.valid {
+  color: green;
+  display: inline;
+}
+.hide {
+  color: red;
+  display: none;
+}
+
+.invalid {
+  color: red;
+  display: inline;
+}
+
+.instructions {
+  background-color: #1a1a1a;
+  color: white;
+  font-size: x-small;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.offscreen {
+}
+input[type="text"],
+input[type="password"] {
+  width: 100%; /* پهنای فیلد را تنظیم می‌کند */
+  padding: 10px; /* فاصله داخلی (padding) بین متن و حاشیه فیلد */
+  border: 2px solid black; /* تنظیم نوع، ضخامت، و رنگ حاشیه */
+  border-radius: 5px; /* گوشه‌های گرد */
+  font-size: 16px; /* اندازه فونت */
+  color: #333; /* رنگ متن */
+  outline: none; /* حذف حاشیه‌ هنگام فوکوس */
+  transition: border-color 0.3s ease-in-out; /* اضافه کردن یک انیمیشن هنگام تغییر رنگ حاشیه */
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -32,6 +81,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: deepskyblue;
 }
 
 h1 {
@@ -70,4 +120,3 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-
