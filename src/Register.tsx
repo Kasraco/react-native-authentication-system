@@ -1,11 +1,14 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "./api/axios";
 
 // regex for user validation
 const USER_REGEX = /^[a-zA-Z][a-zA-Z-0-9-_]{3,23}$/;
 // regex for password validation
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
+const REGISTER_URL = "/register";
 
 const Register = () => {
   const userRef = useRef();
@@ -63,7 +66,32 @@ const Register = () => {
       return;
     }
 
-    setSuccess(true);
+    try {
+      const response = await axios.post(REGISTER_URL, JSON.stringify({ user, pwd }), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+
+      console.log(response.data);
+      console.log(response.accessToken);
+      console.log(JSON.stringify(response));
+
+      setSuccess(true);
+
+      // clear input fields
+    } catch (err) {
+      if (!err?.response) {
+        //ertebat ba server ghat shodeh
+        setErrMsg("No server Response");
+      } else if (err.response?.status === 409) {
+        setErrMsg("username taken");
+      } else {
+        setErrMsg("regstiration failed");
+      }
+
+      // motemarkez mishavim roy an field khatadar
+      errRef.current.focus();
+    }
   };
   return (
     <>
@@ -108,8 +136,8 @@ const Register = () => {
               className={userFocus && user && !validName ? "instructions" : "offscreen"}
             >
               <FontAwesomeIcon icon={faInfoCircle} />
-              4 to 24 charcters <br />
-              Must begin with a letter <br />
+              4 to 24 charcters. <br />
+              Must begin with a letter. <br />
               Letters, numbers, underscores,hyphens allowed.
             </p>
 
