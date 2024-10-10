@@ -1,6 +1,11 @@
-import { useRef, useState, useEffect, FormEvent } from "react";
+import { useRef, useState, useEffect, FormEvent, useContext } from "react";
+import AuthContext from "./context/AuthProvider";
+
+import axios from "./api/axios";
+const LOGIN_URL = "/auth";
 
 const Login = () => {
+  const { setAuth } = useContext(AuthContext);
   const userRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLDivElement>();
 
@@ -20,11 +25,34 @@ const Login = () => {
 
   const handelSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(user, pwd);
-    setUser("");
-    setPwd("");
-    setErrMsg("ss");
-    //setSuccess(false);
+    try {
+      const response = await axios.post(LOGIN_URL, JSON.stringify({ user, pwd }), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+      console.log(JSON.stringify(response?.data));
+      console.log(JSON.stringify(response));
+
+      const accessToken = response?.data?.accessToken;
+      const roles = response?.data?.roles;
+      setAuth({ user, pwd, roles, accessToken });
+      setUser("");
+      setPwd("");
+
+      setSuccess(false);
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg("No server response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Invalid username or password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("unAuthorized");
+      } else {
+        setErrMsg("Login faild");
+      }
+
+      errRef.current?.focus();
+    }
   };
 
   return (
