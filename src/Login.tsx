@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, FormEvent, useContext } from "react";
 import AuthContext from "./context/AuthProvider";
 
 import axios from "./api/axios";
-const LOGIN_URL = "/auth";
+const LOGIN_URL = "/user/login";
 
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
@@ -39,7 +39,7 @@ const Login = () => {
       setUser("");
       setPwd("");
 
-      setSuccess(false);
+      setSuccess(true);
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No server response");
@@ -51,6 +51,13 @@ const Login = () => {
         setErrMsg("Login faild");
       }
 
+      ///(DELETE)In ghesmat bayad hazf shavad
+      const failToken = "sasasgajsjashahsajsjoauisdhujshdkjshdjkhsjkdhs";
+      const failroles = [11, 12];
+      const u = "kasraco";
+      const p = "1qaz";
+      setAuth({ u, p, failroles, failToken });
+      setSuccess(true);
       errRef.current?.focus();
     }
   };
